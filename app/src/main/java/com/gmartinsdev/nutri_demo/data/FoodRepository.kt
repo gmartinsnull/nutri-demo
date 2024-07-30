@@ -9,7 +9,6 @@ import com.gmartinsdev.nutri_demo.data.remote.FoodNotFoundThrowable
 import com.gmartinsdev.nutri_demo.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
