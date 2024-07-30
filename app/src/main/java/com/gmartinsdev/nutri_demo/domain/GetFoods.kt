@@ -7,10 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
- *  usecase class responsible for isolating logic from view layer. Gets all food items from the database
+ *  usecase class responsible for isolating logic from view layer and getting all food items from
+ *  the database
  */
 class GetFoods @Inject constructor(private val repository: FoodRepository) {
     operator fun invoke(): Flow<ApiResult<List<Food>>> {
-        return repository.getFoodsFromDatabase()
+        return repository.getFoodsFromDb()
     }
 }

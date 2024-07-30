@@ -28,16 +28,16 @@ class FoodRepository @Inject constructor(
     /**
      * attempts to retrieve food data from local database. Otherwise, fetches from API
      */
-    fun getFoods(search: String): Flow<ApiResult<List<Food>>> {
+    fun getFoods(foodName: String): Flow<ApiResult<List<Food>>> {
         return networkBoundResource(
             query = {
-                foodDao.getAll()
+                foodDao.getFoodsByName(foodName)
             },
             fetch = {
-                if (search.isNotEmpty()) {
-                    remoteDataSource.fetchFoods(search)
+                if (foodName.isNotEmpty()) {
+                    remoteDataSource.fetchFoods(foodName)
                 } else {
-                    // the API won't handle empty search queries. So in case of an empty db or first
+                    // the API won't handle empty search queries. So in case of an empty db or fresh
                     // install, we return an empty list as a safety measure
                     flowOf(
                         ApiResult.success(
@@ -57,6 +57,10 @@ class FoodRepository @Inject constructor(
                         foodDao.insertAll(it)
                     }
                 }
+            },
+            shouldFetch = { localData ->
+                // only fetches data if db is empty
+                localData.isEmpty()
             }
         ).flowOn(ioDispatcher)
     }
@@ -64,7 +68,7 @@ class FoodRepository @Inject constructor(
     /**
      * retrieves list of all foods from the database
      */
-    fun getFoodsFromDatabase(): Flow<ApiResult<List<Food>>> = flow {
+    fun getFoodsFromDb(): Flow<ApiResult<List<Food>>> = flow {
         val data = foodDao.getAll().first()
         emit(ApiResult.success(data))
     }

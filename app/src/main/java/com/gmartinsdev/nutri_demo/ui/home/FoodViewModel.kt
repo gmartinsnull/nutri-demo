@@ -22,7 +22,7 @@ class FoodViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        fetchData("")
+        getAllFoods()
     }
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
@@ -33,6 +33,7 @@ class FoodViewModel @Inject constructor(
      */
     fun fetchData(title: String) {
         viewModelScope.launch {
+            _state.value = UiState.Loading
             if (title.isEmpty()) {
                 getAllFoods()
             } else {
@@ -44,13 +45,15 @@ class FoodViewModel @Inject constructor(
     /**
      * get all foods stored locally
      */
-    private suspend fun getAllFoods() {
-        getFoods().collect { result ->
-            _state.value = when (result.status) {
-                Status.SUCCESS -> UiState.Loaded(result.data ?: emptyList())
-                Status.ERROR -> UiState.Error(
-                    result.error?.message ?: "error while retrieving all foods"
-                )
+    private fun getAllFoods() {
+        viewModelScope.launch {
+            getFoods().collect { result ->
+                _state.value = when (result.status) {
+                    Status.SUCCESS -> UiState.Loaded(result.data ?: emptyList())
+                    Status.ERROR -> UiState.Error(
+                        result.error?.message ?: "error while retrieving all foods"
+                    )
+                }
             }
         }
     }
