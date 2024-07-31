@@ -1,6 +1,7 @@
 package com.gmartinsdev.nutri_demo.data
 
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
+import com.gmartinsdev.nutri_demo.data.model.CommonFood
 import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.remote.ApiResult
 import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
@@ -26,13 +27,41 @@ class FoodRepository @Inject constructor(
     /**
      * retrieves food data from local database or fetches from remote data source
      */
+    fun getCommonFoods(foodName: String): Flow<ApiResult<List<CommonFood>>> {
+        return networkBoundResource(
+            query = {
+                foodDao.getCommonFoodByName(foodName)
+            },
+            fetch = {
+                remoteDataSource.fetchCommonFoodByTitle(foodName)
+            },
+            saveFetchResult = { response ->
+                val result = response.first()
+                if (result.data == null && result.error != null) { // api may return success but still contain error in body
+                    throw FoodNotFoundThrowable(result.error.message)
+                } else {
+                    result.data?.common?.forEach {
+                        foodDao.insertAllCommon(it)
+                    }
+                }
+            },
+            shouldFetch = {
+                // fetches from remote data source if db is empty
+                it.isEmpty()
+            }
+        ).flowOn(ioDispatcher)
+    }
+
+    /**
+     * retrieves food data from local database or fetches from remote data source
+     */
     fun getFoods(foodName: String): Flow<ApiResult<List<Food>>> {
         return networkBoundResource(
             query = {
                 foodDao.getFoodsByName(foodName)
             },
             fetch = {
-                remoteDataSource.fetchFoodByTitle(foodName)
+                remoteDataSource.fetchFoodNutrientsByTitle(foodName)
             },
             saveFetchResult = { response ->
                 val result = response.first()

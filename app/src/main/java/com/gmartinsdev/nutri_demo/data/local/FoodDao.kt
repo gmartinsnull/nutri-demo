@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.gmartinsdev.nutri_demo.data.model.CommonFood
 import com.gmartinsdev.nutri_demo.data.model.Food
 import kotlinx.coroutines.flow.Flow
 
@@ -14,6 +15,12 @@ import kotlinx.coroutines.flow.Flow
 interface FoodDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg food: Food)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllCommon(vararg commonFood: CommonFood)
+
+    @Query("SELECT * FROM common_food WHERE name LIKE '%' || :query || '%'")
+    fun getCommonFoodByName(query: String): Flow<List<CommonFood>>
 
     @Query("SELECT * FROM foods ORDER BY name ASC")
     fun getAll(): Flow<List<Food>>

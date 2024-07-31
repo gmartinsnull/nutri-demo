@@ -7,6 +7,7 @@ import com.gmartinsdev.nutri_demo.data.local.AppDatabase
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
 import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
 import com.gmartinsdev.nutri_demo.data.remote.FoodService
+import com.gmartinsdev.nutri_demo.domain.GetCommonFoodsByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodByName
 import com.gmartinsdev.nutri_demo.domain.GetFoods
 import com.squareup.moshi.Moshi
@@ -66,4 +67,10 @@ object DataModule {
     fun provideGetFoodByName(
         repository: FoodRepository
     ): GetFoodByName = GetFoodByName(repository)
+
+    @Singleton
+    @Provides
+    fun provideGetCommonFoodsByName(
+        repository: FoodRepository
+    ): GetCommonFoodsByName = GetCommonFoodsByName(repository)
 }

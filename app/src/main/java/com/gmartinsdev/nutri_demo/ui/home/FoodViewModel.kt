@@ -2,7 +2,9 @@ package com.gmartinsdev.nutri_demo.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gmartinsdev.nutri_demo.data.model.CommonFood
 import com.gmartinsdev.nutri_demo.data.remote.Status
+import com.gmartinsdev.nutri_demo.domain.GetCommonFoodsByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodByName
 import com.gmartinsdev.nutri_demo.domain.GetFoods
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FoodViewModel @Inject constructor(
     private val getFoods: GetFoods,
-    private val getFoodByName: GetFoodByName
+    private val getFoodByName: GetFoodByName,
+    private val getCommonFoodsByName: GetCommonFoodsByName
 ) : ViewModel() {
 
     init {
@@ -57,18 +60,45 @@ class FoodViewModel @Inject constructor(
     }
 
     /**
-     * get all foods by title
+     * get all common foods by title
      */
     private fun getFoodsByTitle(title: String) {
         viewModelScope.launch {
-            getFoodByName(title).collect { result ->
-                _state.value = when (result.status) {
-                    Status.SUCCESS -> UiState.Loaded(result.data ?: emptyList())
-                    Status.ERROR -> UiState.Error(
-                        result.error?.message ?: "error while retrieving food by title: $title"
-                    )
+            getCommonFoodsByName(title).collect { result ->
+                when (result.status) {
+                    Status.SUCCESS -> handleCommonFoods(result.data ?: emptyList())
+                    Status.ERROR -> {
+                        _state.value = UiState.Error(
+                            result.error?.message
+                                ?: "error while retrieving common foods by title: $title"
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
+     * handle successful common food data and gets each food nutrients by name
+     */
+    private fun handleCommonFoods(commonFoods: List<CommonFood>) {
+        viewModelScope.launch {
+            commonFoods.forEach { commonFood ->
+                getFoodByName(commonFood.name).collect { result ->
+                    when (result.status) {
+                        Status.ERROR -> UiState.Error(
+                            result.error?.message
+                                ?: "error while retrieving food nutrients by title: ${commonFood.name}"
+                        )
+
+                        Status.SUCCESS -> {
+                            // do nothing if success
+                        }
+                    }
                 }
             }
+            getAllFoods()
         }
     }
 }

@@ -11,9 +11,17 @@ class RemoteDataSource @Inject constructor(
     private val service: FoodService
 ) {
     /**
+     * fetches data from common foods API
+     */
+    fun fetchCommonFoodByTitle(foodTitle: String): Flow<ApiResult<CommonFoodsApiResponse>> = flow {
+        emit(handleApiCall { service.fetchCommonFoods(foodTitle) })
+    }
+
+    /**
      * fetches data from natural language food and nutrients API
      */
-    fun fetchFoodByTitle(foodTitle: String): Flow<ApiResult<FoodApiResponse>> = flow {
-        emit(handleApiCall { service.fetchFoodInfo(FoodApiRequest(foodTitle)) })
-    }
+    fun fetchFoodNutrientsByTitle(foodTitle: String): Flow<ApiResult<FoodNutrientsApiResponse>> =
+        flow {
+            emit(handleApiCall { service.fetchFoodNutrients(FoodApiRequest(foodTitle)) })
+        }
 }
