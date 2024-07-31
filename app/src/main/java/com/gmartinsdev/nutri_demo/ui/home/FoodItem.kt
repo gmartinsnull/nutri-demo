@@ -103,9 +103,23 @@ fun FoodItemPreview() {
     MainTheme {
         FoodItem(
             item = Food(
-                "1",
+                1,
                 "aaa",
-                100,
+                1,
+                "small",
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                100.00,
+                "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate (to Protect Taste), Natural Flavors, Citric Acid, Caffeine.",
                 Photo("www.aaa.com/photo1")
             )
         ) {

@@ -7,7 +7,7 @@ import com.gmartinsdev.nutri_demo.data.local.AppDatabase
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
 import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
 import com.gmartinsdev.nutri_demo.data.remote.FoodService
-import com.gmartinsdev.nutri_demo.domain.GetFoodByTitle
+import com.gmartinsdev.nutri_demo.domain.GetFoodByName
 import com.gmartinsdev.nutri_demo.domain.GetFoods
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -49,7 +49,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideMovieRepositoryImpl(
+    fun provideFoodRepository(
         remoteDataSource: RemoteDataSource,
         foodDao: FoodDao,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
@@ -57,13 +57,13 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideGetFoodByTitle(
+    fun provideGetFoods(
         repository: FoodRepository
-    ): GetFoodByTitle = GetFoodByTitle(repository)
+    ): GetFoods = GetFoods(repository)
 
     @Singleton
     @Provides
-    fun provideGetMovies(
+    fun provideGetFoodByName(
         repository: FoodRepository
-    ): GetFoods = GetFoods(repository)
+    ): GetFoodByName = GetFoodByName(repository)
 }

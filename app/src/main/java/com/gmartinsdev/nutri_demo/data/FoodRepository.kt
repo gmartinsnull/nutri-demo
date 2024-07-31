@@ -1,8 +1,7 @@
 package com.gmartinsdev.nutri_demo.data
 
-import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
-import com.gmartinsdev.nutri_demo.data.remote.ApiResponse
+import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.remote.ApiResult
 import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
 import com.gmartinsdev.nutri_demo.data.remote.FoodNotFoundThrowable
@@ -11,7 +10,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import networkBoundResource
 import javax.inject.Inject
@@ -26,7 +24,7 @@ class FoodRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) {
     /**
-     * attempts to retrieve food data from local database. Otherwise, fetches from API
+     * retrieves food data from local database or fetches from remote data source
      */
     fun getFoods(foodName: String): Flow<ApiResult<List<Food>>> {
         return networkBoundResource(
@@ -34,33 +32,21 @@ class FoodRepository @Inject constructor(
                 foodDao.getFoodsByName(foodName)
             },
             fetch = {
-                if (foodName.isNotEmpty()) {
-                    remoteDataSource.fetchFoods(foodName)
-                } else {
-                    // the API won't handle empty search queries. So in case of an empty db or fresh
-                    // install, we return an empty list as a safety measure
-                    flowOf(
-                        ApiResult.success(
-                            ApiResponse(
-                                emptyList()
-                            )
-                        )
-                    )
-                }
+                remoteDataSource.fetchFoodByTitle(foodName)
             },
             saveFetchResult = { response ->
                 val result = response.first()
                 if (result.data == null && result.error != null) { // api may return success but still contain error in body
                     throw FoodNotFoundThrowable(result.error.message)
                 } else {
-                    result.data?.branded?.forEach {
+                    result.data?.foods?.forEach {
                         foodDao.insertAll(it)
                     }
                 }
             },
-            shouldFetch = { localData ->
-                // only fetches data if db is empty
-                localData.isEmpty()
+            shouldFetch = {
+                // fetches from remote data source if db is empty
+                it.isEmpty()
             }
         ).flowOn(ioDispatcher)
     }

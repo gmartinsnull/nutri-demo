@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
- *  usecase class responsible for isolating logic from view layer and getting all food items from
+ *  usecase class responsible for isolating logic from view layer and getting all foods from
  *  the database
  */
 class GetFoods @Inject constructor(private val repository: FoodRepository) {
