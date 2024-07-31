@@ -2,18 +2,19 @@ package com.gmartinsdev.nutri_demo.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -47,51 +48,49 @@ fun FoodItem(
     item: Food,
     onClick: (Food) -> Unit
 ) {
-    Box(
+    Row(
         modifier = Modifier
-            .width(120.dp)
-            .height(250.dp)
+            .fillMaxWidth()
+            .height(120.dp)
             .clip(shape = RoundedCornerShape(14.dp))
             .background(MaterialTheme.colorScheme.tertiary)
+            .clickable { onClick.invoke(item) }
     ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = rememberAsyncImagePainter(
-                model = item.photo.thumb,
-                error = painterResource(id = R.drawable.notlikethis),
-                placeholder = painterResource(id = R.drawable.image_not_available)
-            ),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
         Column(
             modifier = Modifier
-                .padding(top = 14.dp, start = 10.dp)
+                .weight(1f)
+                .fillMaxHeight()
+                .background(Color.Yellow)
+        ) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = rememberAsyncImagePainter(
+                    model = item.photo.thumb,
+                    error = painterResource(id = R.drawable.notlikethis),
+                    placeholder = painterResource(id = R.drawable.image_not_available)
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
+        Column(
+            modifier = Modifier
+                .weight(2f)
+                .fillMaxHeight()
+                .padding(top = 10.dp, start = 10.dp)
         ) {
             Text(
                 modifier = Modifier.width(200.dp),
                 textAlign = TextAlign.Start,
-                color = Color.Black,
+                color = Color.White,
                 text = item.name,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge,
             )
             Text(
                 text = "${item.cal} calories",
-                color = Color.Black,
-                style = MaterialTheme.typography.labelMedium
-            )
-        }
-        Button(
-            modifier = Modifier
-                .width(120.dp)
-                .padding(bottom = 5.dp)
-                .align(Alignment.BottomCenter),
-            onClick = { onClick.invoke(item) }
-        ) {
-            Text(
                 color = Color.White,
-                text = "Details"
+                style = MaterialTheme.typography.labelMedium
             )
         }
     }
