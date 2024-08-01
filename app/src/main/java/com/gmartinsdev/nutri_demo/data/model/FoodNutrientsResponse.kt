@@ -1,16 +1,11 @@
 package com.gmartinsdev.nutri_demo.data.model
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
 /**
- * data class representing food nutrients
+ * data class representing food nutrients response
  */
-@Entity(tableName = "foods")
-data class Food(
-    @PrimaryKey
+data class FoodNutrientsResponse(
     @Json(name = "ndb_no")
     val id: Int,
     @Json(name = "food_name")
@@ -43,6 +38,27 @@ data class Food(
     val potassium: Double,
     @Json(name = "nf_p")
     val phosphorus: Double,
-    @Embedded
-    val photo: Photo
-)
+    val photo: Photo,
+    @Json(name = "sub_recipe")
+    val ingredients: List<SubRecipe>?
+){
+    fun parseToFood() = Food(
+            id = this.id,
+            name = this.name,
+            servingQty = this.servingQty,
+            servingUnit = this.servingUnit,
+            servingWeight = this.servingWeight,
+            cal = this.cal,
+            totalFat = this.totalFat,
+            saturatedFat = this.saturatedFat,
+            cholesterol = this.cholesterol,
+            sodium = this.sodium,
+            totalCarbs = this.totalCarbs,
+            fiber = this.fiber,
+            sugars = this.sugars,
+            protein = this.protein,
+            potassium = this.potassium,
+            phosphorus = this.phosphorus,
+            photo = this.photo
+        )
+}

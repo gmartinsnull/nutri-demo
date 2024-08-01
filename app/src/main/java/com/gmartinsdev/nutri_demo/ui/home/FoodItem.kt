@@ -104,7 +104,7 @@ fun FoodItemPreview() {
             item = Food(
                 1,
                 "aaa",
-                1,
+                1.0,
                 "small",
                 100.00,
                 100.00,
@@ -118,7 +118,6 @@ fun FoodItemPreview() {
                 100.00,
                 100.00,
                 100.00,
-                "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate (to Protect Taste), Natural Flavors, Citric Acid, Caffeine.",
                 Photo("www.aaa.com/photo1")
             )
         ) {

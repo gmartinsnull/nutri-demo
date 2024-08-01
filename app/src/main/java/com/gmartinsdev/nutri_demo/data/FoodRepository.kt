@@ -3,6 +3,7 @@ package com.gmartinsdev.nutri_demo.data
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
 import com.gmartinsdev.nutri_demo.data.model.CommonFood
 import com.gmartinsdev.nutri_demo.data.model.Food
+import com.gmartinsdev.nutri_demo.data.model.FoodWithIngredients
 import com.gmartinsdev.nutri_demo.data.remote.ApiResult
 import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
 import com.gmartinsdev.nutri_demo.data.remote.FoodNotFoundThrowable
@@ -41,7 +42,7 @@ class FoodRepository @Inject constructor(
                     throw FoodNotFoundThrowable(result.error.message)
                 } else {
                     result.data?.common?.forEach {
-                        foodDao.insertAllCommon(it)
+                        foodDao.insertCommonFood(it)
                     }
                 }
             },
@@ -69,7 +70,10 @@ class FoodRepository @Inject constructor(
                     throw FoodNotFoundThrowable(result.error.message)
                 } else {
                     result.data?.foods?.forEach {
-                        foodDao.insertAll(it)
+                        foodDao.insertFood(it.parseToFood())
+                        it.ingredients?.forEach {
+                            foodDao.insertIngredients(it)
+                        }
                     }
                 }
             },
@@ -85,6 +89,14 @@ class FoodRepository @Inject constructor(
      */
     fun getFoodsFromDb(): Flow<ApiResult<List<Food>>> = flow {
         val data = foodDao.getAll().first()
+        emit(ApiResult.success(data))
+    }
+
+    /**
+     * retrieves list of all foods from the database
+     */
+    fun getFoodIngredientsFromDb(foodId: Int): Flow<ApiResult<FoodWithIngredients>> = flow {
+        val data = foodDao.getFoodWithIngredients(foodId).first()
         emit(ApiResult.success(data))
     }
 }

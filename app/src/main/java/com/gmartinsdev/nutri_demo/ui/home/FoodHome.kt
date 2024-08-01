@@ -45,6 +45,7 @@ fun FoodHomeScreen() {
             state = state,
             onClick = {
                 Toast.makeText(context, "${it.name} clicked", Toast.LENGTH_LONG).show()
+                // TODO: navigate to foodinfo composable
             },
             onSearch = {
                 vm.fetchData(it)
@@ -138,7 +139,7 @@ fun FoodHomePreview() {
                     Food(
                         1,
                         "aaa",
-                        1,
+                        1.0,
                         "large",
                         100.00,
                         100.00,
@@ -152,13 +153,12 @@ fun FoodHomePreview() {
                         100.00,
                         100.00,
                         100.00,
-                        "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate (to Protect Taste), Natural Flavors, Citric Acid, Caffeine.",
                         Photo("www.aaa.com/photo1")
                     ),
                     Food(
                         2,
                         "bbb",
-                        1,
+                        2.0,
                         "large",
                         100.00,
                         200.00,
@@ -172,13 +172,12 @@ fun FoodHomePreview() {
                         100.00,
                         100.00,
                         100.00,
-                        "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate (to Protect Taste), Natural Flavors, Citric Acid, Caffeine.",
                         Photo("www.aaa.com/photo2")
                     ),
                     Food(
                         3,
                         "ccc",
-                        1,
+                        3.0,
                         "large",
                         100.00,
                         300.00,
@@ -192,13 +191,12 @@ fun FoodHomePreview() {
                         100.00,
                         100.00,
                         100.00,
-                        "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate (to Protect Taste), Natural Flavors, Citric Acid, Caffeine.",
                         Photo("www.aaa.com/photo3")
                     ),
                     Food(
                         4,
                         "ddd",
-                        1,
+                        4.0,
                         "large",
                         100.00,
                         400.00,
@@ -212,13 +210,12 @@ fun FoodHomePreview() {
                         100.00,
                         100.00,
                         100.00,
-                        "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate (to Protect Taste), Natural Flavors, Citric Acid, Caffeine.",
                         Photo("www.aaa.com/photo4")
                     ),
                     Food(
                         5,
                         "eee",
-                        1,
+                        5.0,
                         "large",
                         100.00,
                         500.00,
@@ -232,7 +229,6 @@ fun FoodHomePreview() {
                         100.00,
                         100.00,
                         100.00,
-                        "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate (to Protect Taste), Natural Flavors, Citric Acid, Caffeine.",
                         Photo("www.aaa.com/photo5")
                     ),
                 )

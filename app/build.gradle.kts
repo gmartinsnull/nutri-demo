@@ -72,6 +72,9 @@ dependencies {
     // compose viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
+    //compose navigation
+    implementation(libs.androidx.compose.nav)
+
     // hilt
     implementation(libs.androidx.hilt)
     kapt(libs.androidx.hilt.android.compiler)
