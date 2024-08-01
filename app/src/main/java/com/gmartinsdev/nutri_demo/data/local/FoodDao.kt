@@ -33,7 +33,7 @@ interface FoodDao {
 
     // sub-recipe operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertIngredients(ingredients: SubRecipe)
+    fun insertIngredients(ingredients: List<SubRecipe>)
 
     @Transaction
     @Query("SELECT * FROM foods WHERE id = :foodId")

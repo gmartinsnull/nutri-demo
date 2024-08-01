@@ -7,7 +7,7 @@ import com.squareup.moshi.Json
  */
 data class FoodNutrientsResponse(
     @Json(name = "ndb_no")
-    val id: Int,
+    val recipeId: Int,
     @Json(name = "food_name")
     val name: String,
     @Json(name = "serving_qty")
@@ -41,24 +41,24 @@ data class FoodNutrientsResponse(
     val photo: Photo,
     @Json(name = "sub_recipe")
     val ingredients: List<SubRecipe>?
-){
+) {
     fun parseToFood() = Food(
-            id = this.id,
-            name = this.name,
-            servingQty = this.servingQty,
-            servingUnit = this.servingUnit,
-            servingWeight = this.servingWeight,
-            cal = this.cal,
-            totalFat = this.totalFat,
-            saturatedFat = this.saturatedFat,
-            cholesterol = this.cholesterol,
-            sodium = this.sodium,
-            totalCarbs = this.totalCarbs,
-            fiber = this.fiber,
-            sugars = this.sugars,
-            protein = this.protein,
-            potassium = this.potassium,
-            phosphorus = this.phosphorus,
-            photo = this.photo
-        )
+        id = this.recipeId,
+        name = this.name,
+        servingQty = this.servingQty,
+        servingUnit = this.servingUnit,
+        servingWeight = this.servingWeight,
+        cal = this.cal,
+        totalFat = this.totalFat,
+        saturatedFat = this.saturatedFat,
+        cholesterol = this.cholesterol,
+        sodium = this.sodium,
+        totalCarbs = this.totalCarbs,
+        fiber = this.fiber,
+        sugars = this.sugars,
+        protein = this.protein,
+        potassium = this.potassium,
+        phosphorus = this.phosphorus,
+        photo = this.photo
+    )
 }

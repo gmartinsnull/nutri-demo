@@ -9,6 +9,7 @@ import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
 import com.gmartinsdev.nutri_demo.data.remote.FoodService
 import com.gmartinsdev.nutri_demo.domain.GetCommonFoodsByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodByName
+import com.gmartinsdev.nutri_demo.domain.GetFoodWithIngredients
 import com.gmartinsdev.nutri_demo.domain.GetFoods
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -73,4 +74,10 @@ object DataModule {
     fun provideGetCommonFoodsByName(
         repository: FoodRepository
     ): GetCommonFoodsByName = GetCommonFoodsByName(repository)
+
+    @Singleton
+    @Provides
+    fun provideGetFoodWithIngredients(
+        repository: FoodRepository
+    ): GetFoodWithIngredients = GetFoodWithIngredients(repository)
 }

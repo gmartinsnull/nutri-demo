@@ -66,13 +66,21 @@ class FoodRepository @Inject constructor(
             },
             saveFetchResult = { response ->
                 val result = response.first()
-                if (result.data == null && result.error != null) { // api may return success but still contain error in body
-                    throw FoodNotFoundThrowable(result.error.message)
+                if (
+                    result.data == null && result.error != null ||
+                    result.data != null && !result.data.message.isNullOrEmpty()
+                ) { // api may return success but still contain error in body
+                    val message = if (result.data == null)
+                        result.error?.message
+                    else
+                        result.data.message
+                    throw FoodNotFoundThrowable(message ?: "API result unknown exception")
                 } else {
-                    result.data?.foods?.forEach {
-                        foodDao.insertFood(it.parseToFood())
-                        it.ingredients?.forEach {
-                            foodDao.insertIngredients(it)
+                    val data = result.data?.foods?.first()
+                    data?.let { foodInfo ->
+                        foodDao.insertFood(foodInfo.parseToFood())
+                        foodInfo.ingredients?.let { recipes ->
+                            foodDao.insertIngredients(recipes)
                         }
                     }
                 }

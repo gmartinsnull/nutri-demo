@@ -102,7 +102,7 @@ fun FoodItemPreview() {
     MainTheme {
         FoodItem(
             item = Food(
-                1,
+                111,
                 "aaa",
                 1.0,
                 "small",

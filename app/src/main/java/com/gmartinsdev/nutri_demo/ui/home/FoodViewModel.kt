@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- *  viewmodel class responsible for handling data from usercase class to view layer
+ *  viewmodel class responsible for handling data from food usercase classes to view layer
  */
 @HiltViewModel
 class FoodViewModel @Inject constructor(

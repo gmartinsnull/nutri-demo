@@ -26,8 +26,8 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "API_URL", "\"https://trackapi.nutritionix.com\"")
-            buildConfigField("String", "API_ID", "\"54b511f9\"")
-            buildConfigField("String", "API_KEY", "\"58f60dd9560baaa0380b7e72bd963fbc\"")
+            buildConfigField("String", "API_ID", "\"6eba3a82\"")
+            buildConfigField("String", "API_KEY", "\"aaeb33247ded636897c03f63fac98e9a\"")
         }
         release {
             isMinifyEnabled = false
@@ -73,10 +73,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     //compose navigation
-    implementation(libs.androidx.compose.nav)
+    implementation(libs.androidx.nav.compose)
 
     // hilt
     implementation(libs.androidx.hilt)
+    implementation(libs.androidx.nav.hilt)
     kapt(libs.androidx.hilt.android.compiler)
 
     // retrofit
