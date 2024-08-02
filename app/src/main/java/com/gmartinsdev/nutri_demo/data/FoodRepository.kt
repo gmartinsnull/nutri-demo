@@ -5,8 +5,8 @@ import com.gmartinsdev.nutri_demo.data.model.CommonFood
 import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.model.FoodWithIngredients
 import com.gmartinsdev.nutri_demo.data.remote.ApiResult
-import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
-import com.gmartinsdev.nutri_demo.data.remote.FoodNotFoundThrowable
+import com.gmartinsdev.nutri_demo.data.remote.nutri.RemoteDataSource
+import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodNotFoundThrowable
 import com.gmartinsdev.nutri_demo.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

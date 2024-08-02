@@ -1,7 +1,8 @@
 package com.gmartinsdev.nutri_demo.di
 
 import com.gmartinsdev.nutri_demo.BuildConfig
-import com.gmartinsdev.nutri_demo.data.remote.FoodService
+import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodService
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.GoogleMapsService
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -48,4 +49,16 @@ object NetworkModule {
         .client(okHttpClient)
         .build()
         .create(FoodService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideGoogleMapsService(
+        converterFactory: MoshiConverterFactory,
+        okHttpClient: OkHttpClient
+    ): GoogleMapsService = Retrofit.Builder()
+        .baseUrl(BuildConfig.MAPS_API_URL)
+        .addConverterFactory(converterFactory)
+        .client(okHttpClient)
+        .build()
+        .create(GoogleMapsService::class.java)
 }

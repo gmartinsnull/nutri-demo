@@ -1,4 +1,4 @@
-package com.gmartinsdev.nutri_demo.data.remote
+package com.gmartinsdev.nutri_demo.data.remote.nutri
 
 import com.gmartinsdev.nutri_demo.BuildConfig
 import retrofit2.Response
@@ -9,7 +9,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 /**
- *  service class responsible for handling API calls
+ *  service class responsible for handling calls from food API
  */
 interface FoodService {
     @Headers(

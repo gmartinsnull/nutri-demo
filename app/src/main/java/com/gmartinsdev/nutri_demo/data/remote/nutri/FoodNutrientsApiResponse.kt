@@ -1,4 +1,4 @@
-package com.gmartinsdev.nutri_demo.data.remote
+package com.gmartinsdev.nutri_demo.data.remote.nutri
 
 import com.gmartinsdev.nutri_demo.data.model.FoodNutrientsResponse
 

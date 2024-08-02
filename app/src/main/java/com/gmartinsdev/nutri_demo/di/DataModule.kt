@@ -5,12 +5,15 @@ import androidx.room.Room
 import com.gmartinsdev.nutri_demo.data.FoodRepository
 import com.gmartinsdev.nutri_demo.data.local.AppDatabase
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
-import com.gmartinsdev.nutri_demo.data.remote.RemoteDataSource
-import com.gmartinsdev.nutri_demo.data.remote.FoodService
+import com.gmartinsdev.nutri_demo.data.remote.NearbySearchRepository
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.GoogleMapsService
+import com.gmartinsdev.nutri_demo.data.remote.nutri.RemoteDataSource
+import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodService
 import com.gmartinsdev.nutri_demo.domain.GetCommonFoodsByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodWithIngredients
 import com.gmartinsdev.nutri_demo.domain.GetFoods
+import com.gmartinsdev.nutri_demo.domain.SearchNearbyPlaces
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -46,8 +49,11 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideRemoteDataSource(service: FoodService): RemoteDataSource =
-        RemoteDataSource(service)
+    fun provideRemoteDataSource(
+        service: FoodService,
+        googleMapsService: GoogleMapsService
+    ): RemoteDataSource =
+        RemoteDataSource(service, googleMapsService)
 
     @Singleton
     @Provides
@@ -56,6 +62,13 @@ object DataModule {
         foodDao: FoodDao,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): FoodRepository = FoodRepository(remoteDataSource, foodDao, ioDispatcher)
+
+    @Singleton
+    @Provides
+    fun provideNearbySearchRepository(
+        remoteDataSource: RemoteDataSource,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ): NearbySearchRepository = NearbySearchRepository(remoteDataSource, ioDispatcher)
 
     @Singleton
     @Provides
@@ -80,4 +93,10 @@ object DataModule {
     fun provideGetFoodWithIngredients(
         repository: FoodRepository
     ): GetFoodWithIngredients = GetFoodWithIngredients(repository)
+
+    @Singleton
+    @Provides
+    fun provideSearchNearbyPlaces(
+        repository: NearbySearchRepository
+    ): SearchNearbyPlaces = SearchNearbyPlaces(repository)
 }

@@ -1,5 +1,7 @@
 package com.gmartinsdev.nutri_demo.ui.info
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,11 +39,17 @@ import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.model.FoodWithIngredients
 import com.gmartinsdev.nutri_demo.data.model.Photo
 import com.gmartinsdev.nutri_demo.data.model.SubRecipe
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.Geolocation
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.NearbySearchApiResponse
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.NearbySearchGeometry
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.NearbySearchResult
 import com.gmartinsdev.nutri_demo.ui.components.ErrorMessageScreen
 import com.gmartinsdev.nutri_demo.ui.theme.MainTheme
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 
 /**
@@ -52,13 +61,17 @@ fun FoodInfoScreen(
     vm: FoodInfoViewModel = hiltViewModel(),
     navigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
     LaunchedEffect(key1 = foodId) {
         vm.getFoodWithRecipe(foodId)
     }
 
     val state by vm.state.collectAsState()
+    val stateMap by vm.stateMap.collectAsState()
     FoodInfo(
         state = state,
+        stateMap = stateMap,
+        context = context,
         onUpdateIngredient = {
             vm.updateIngredients(it)
         },
@@ -74,6 +87,8 @@ fun FoodInfoScreen(
 fun FoodInfo(
     modifier: Modifier = Modifier,
     state: UiInfoState,
+    stateMap: UiMapState,
+    context: Context,
     onUpdateIngredient: (List<SubRecipe>) -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -122,17 +137,48 @@ fun FoodInfo(
                     )
                 },
                 sheetContent = {
-                    // TODO: implement user gps permission request to get user current location
-                    val vancouver = LatLng(49.283832198, -123.119332856)
-                    val cameraPositionState = rememberCameraPositionState {
-                        position = CameraPosition.fromLatLngZoom(vancouver, 13f)
+                    when (stateMap) {
+                        is UiMapState.Loading -> {
+                            Box(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(0.6f),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+
+                        is UiMapState.Loaded -> {
+                            // TODO: implement user gps permission request to get user current location
+                            val vancouver = LatLng(49.283832198, -123.119332856)
+                            val cameraPositionState = rememberCameraPositionState {
+                                position = CameraPosition.fromLatLngZoom(vancouver, 13f)
+                            }
+                            GoogleMap(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(0.6f),
+                                cameraPositionState = cameraPositionState
+                            ) {
+                                stateMap.data.results.forEach { nearby ->
+                                    val (lat, lng) = nearby.geometry.location
+                                    Marker(
+                                        state = MarkerState(position = LatLng(lat, lng)),
+                                        title = nearby.name
+                                    )
+                                }
+                            }
+                        }
+
+                        is UiMapState.Error -> {
+                            Toast.makeText(
+                                context,
+                                "Error while fetching nearby places",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
-                    GoogleMap(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.6f),
-                        cameraPositionState = cameraPositionState
-                    )
                 },
                 content = {
                     Column(
@@ -170,6 +216,24 @@ fun FoodInfo(
 fun FoodInfoPreview() {
     MainTheme {
         FoodInfo(
+            stateMap = UiMapState.Loaded(
+                NearbySearchApiResponse(
+                    listOf(
+                        NearbySearchResult(
+                            NearbySearchGeometry(Geolocation(123.0, 234.0)),
+                            "uncle bob pizza"
+                        ),
+                        NearbySearchResult(
+                            NearbySearchGeometry(Geolocation(123.0, 234.0)),
+                            "two and a half twins pizza"
+                        ),
+                        NearbySearchResult(
+                            NearbySearchGeometry(Geolocation(123.0, 234.0)),
+                            "itchy elbow pizza"
+                        )
+                    )
+                )
+            ),
             state = UiInfoState.Loaded(
                 FoodWithIngredients(
                     food = Food(
@@ -222,6 +286,7 @@ fun FoodInfoPreview() {
                     )
                 )
             ),
+            context = LocalContext.current,
             onUpdateIngredient = {
 
             },

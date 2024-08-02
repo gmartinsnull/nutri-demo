@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.gmartinsdev.nutri_demo.data.model.SubRecipe
 import com.gmartinsdev.nutri_demo.data.remote.Status
 import com.gmartinsdev.nutri_demo.domain.GetFoodWithIngredients
+import com.gmartinsdev.nutri_demo.domain.SearchNearbyPlaces
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,27 +18,61 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class FoodInfoViewModel @Inject constructor(
-    private val getFoodWithIngredients: GetFoodWithIngredients
+    private val getFoodWithIngredients: GetFoodWithIngredients,
+    private val searchNearbyPlaces: SearchNearbyPlaces
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UiInfoState>(UiInfoState.Loading)
     val state: StateFlow<UiInfoState> = _state.asStateFlow()
+    private val _stateMap = MutableStateFlow<UiMapState>(UiMapState.Loading)
+    val stateMap: StateFlow<UiMapState> = _stateMap.asStateFlow()
 
+    /**
+     * retrieves food and its recipe ingredients by id
+     */
     fun getFoodWithRecipe(foodId: Int) {
         viewModelScope.launch {
             getFoodWithIngredients(foodId).collect { result ->
                 _state.value = when (result.status) {
                     Status.SUCCESS -> {
-                        if (result.data != null)
+                        if (result.data != null) {
+                            getNearbyPlaces(result.data.food.name)
                             UiInfoState.Loaded(result.data)
-                        else
+                        } else {
                             UiInfoState.Error(
                                 "null data while retrieving food with recipe: $foodId"
                             )
+                        }
                     }
 
                     Status.ERROR -> UiInfoState.Error(
                         result.error?.message ?: "error while retrieving food with recipe: $foodId"
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * retrieve nearby places by keyword for google maps markers
+     */
+    private fun getNearbyPlaces(keyword: String) {
+        viewModelScope.launch {
+            searchNearbyPlaces(keyword).collect { result ->
+                _stateMap.value = when (result.status) {
+                    Status.SUCCESS -> {
+                        if (result.data != null) {
+                            UiMapState.Loaded(result.data)
+                        } else {
+                            UiMapState.Error(
+                                "null data while retrieving nearby search result with keyword: $keyword"
+                            )
+                        }
+                    }
+
+                    Status.ERROR -> UiMapState.Error(
+                        result.error?.message
+                            ?: "error while retrieving nearby search result with keyword: $keyword"
                     )
                 }
             }

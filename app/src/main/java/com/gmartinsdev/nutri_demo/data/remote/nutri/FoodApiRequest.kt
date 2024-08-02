@@ -1,4 +1,4 @@
-package com.gmartinsdev.nutri_demo.data.remote
+package com.gmartinsdev.nutri_demo.data.remote.nutri
 
 /**
  *  data class representing food API request body for food nutrients
