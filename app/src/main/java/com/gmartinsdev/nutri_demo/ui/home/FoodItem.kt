@@ -53,7 +53,7 @@ fun FoodItem(
             .fillMaxWidth()
             .height(120.dp)
             .clip(shape = RoundedCornerShape(14.dp))
-            .background(MaterialTheme.colorScheme.tertiary)
+            .background(MaterialTheme.colorScheme.secondary)
             .clickable { onClick.invoke(item) }
     ) {
         Column(

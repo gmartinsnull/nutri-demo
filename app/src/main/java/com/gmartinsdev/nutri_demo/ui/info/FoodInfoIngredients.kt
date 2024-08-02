@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +65,6 @@ fun FoodInfoIngredients(
                                 .weight(1f)
                                 .padding(start = 6.dp),
                             textAlign = TextAlign.Center,
-                            color = Color.White,
                             text = ingredient.food,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium,

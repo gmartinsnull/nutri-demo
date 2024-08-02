@@ -11,7 +11,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +56,6 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            color = Color.White,
             text = "Qty: \n${food.value.servingQty}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
@@ -66,7 +64,6 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            color = Color.White,
             text = "Unit: \n${food.value.servingUnit}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
@@ -75,7 +72,6 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            color = Color.White,
             text = "Food: \n${food.value.name}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
@@ -84,7 +80,6 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            color = Color.White,
             text = "Calories: \n${food.value.cal}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
@@ -93,7 +88,6 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            color = Color.White,
             text = "Weight: \n${food.value.servingWeight}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,

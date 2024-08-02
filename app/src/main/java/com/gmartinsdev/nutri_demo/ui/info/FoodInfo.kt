@@ -2,7 +2,6 @@ package com.gmartinsdev.nutri_demo.ui.info
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -184,7 +182,6 @@ fun FoodInfo(
                     Column(
                         modifier = modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.tertiary)
                     ) {
                         FoodInfoHeaderScreen(food = food)
                         FoodInfoBodyScreen(food = food)

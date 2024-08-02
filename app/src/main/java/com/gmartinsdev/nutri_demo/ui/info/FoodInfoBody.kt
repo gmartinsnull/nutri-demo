@@ -10,7 +10,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +36,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                color = Color.White,
                 text = "Nutrition Facts",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
@@ -47,7 +45,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                color = Color.White,
                 text = "Calories: ${food.value.cal} (per serving)",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
@@ -57,7 +54,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                color = Color.White,
                 text = "Total Fat: ${food.value.totalFat}g",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
@@ -67,7 +63,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 18.dp),
                 textAlign = TextAlign.Center,
-                color = Color.White,
                 text = "Saturated Fat: ${food.value.saturatedFat}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
@@ -77,7 +72,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                color = Color.White,
                 text = "Cholesterol: ${food.value.cholesterol}mg",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
@@ -87,7 +81,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                color = Color.White,
                 text = "Sodium: ${food.value.sodium}mg",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
@@ -97,7 +90,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                color = Color.White,
                 text = "Total Carbohydrates: ${food.value.totalCarbs}g",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
@@ -107,7 +99,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 18.dp),
                 textAlign = TextAlign.Center,
-                color = Color.White,
                 text = "Dietary Fiber: ${food.value.fiber}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
@@ -117,7 +108,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 18.dp),
                 textAlign = TextAlign.Center,
-                color = Color.White,
                 text = "Sugars: ${food.value.sugars}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
@@ -127,7 +117,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                color = Color.White,
                 text = "Protein: ${food.value.protein}g",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
@@ -137,7 +126,6 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Center,
-                color = Color.White,
                 text = "Potassium: ${food.value.potassium}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
