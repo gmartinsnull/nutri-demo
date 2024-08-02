@@ -2,6 +2,7 @@ package com.gmartinsdev.nutri_demo.ui.info
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gmartinsdev.nutri_demo.data.model.SubRecipe
 import com.gmartinsdev.nutri_demo.data.remote.Status
 import com.gmartinsdev.nutri_demo.domain.GetFoodWithIngredients
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,13 +23,6 @@ class FoodInfoViewModel @Inject constructor(
     private val _state = MutableStateFlow<UiInfoState>(UiInfoState.Loading)
     val state: StateFlow<UiInfoState> = _state.asStateFlow()
 
-    /**
-     * fetches ingredients as food data from data source
-     */
-    private fun fetchIngredientsById() {
-        // TODO: implement thing so it fetches ingredients as food items
-    }
-
     fun getFoodWithRecipe(foodId: Int) {
         viewModelScope.launch {
             getFoodWithIngredients(foodId).collect { result ->
@@ -48,5 +42,20 @@ class FoodInfoViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    /**
+     * recalculates nutrients based on changed in ingredient values
+     */
+    fun updateIngredients(newIngredients: List<SubRecipe>) {
+        fetchIngredientsById()
+        // TODO: implement nutrients recalculation and update nutrition values
+    }
+
+    /**
+     * fetches ingredients as food data from data source
+     */
+    private fun fetchIngredientsById() {
+        // TODO: implement thing so it fetches ingredients as food items
     }
 }
