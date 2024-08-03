@@ -100,17 +100,20 @@ class FoodViewModel @Inject constructor(
                                 }
                             }
 
-                            Status.ERROR -> UiState.Error(
-                                result.error?.message
-                                    ?: "error while retrieving food nutrients by title: ${commonFood.name}"
-                            )
+                            Status.ERROR -> {
+                                _state.value = UiState.Error(
+                                    result.error?.message
+                                        ?: "error while retrieving food nutrients by title: ${commonFood.name}"
+                                )
+                            }
 
                         }
                     }
                 }
             }
             fetchJobs.awaitAll()
-            _state.value = UiState.Loaded(foods.sortedBy { it.name })
+            if (foods.isNotEmpty())
+                _state.value = UiState.Loaded(foods.sortedBy { it.name })
         }
     }
 }

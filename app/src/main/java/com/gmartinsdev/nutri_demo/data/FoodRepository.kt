@@ -49,7 +49,7 @@ class FoodRepository @Inject constructor(
             },
             shouldFetch = {
                 // fetches from remote data source if db is empty
-                it == null
+                it.isNullOrEmpty()
             }
         ).flowOn(ioDispatcher)
     }

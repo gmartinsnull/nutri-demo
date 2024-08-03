@@ -4,6 +4,8 @@ import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonEncodingException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Response
 
 /**
@@ -42,10 +44,12 @@ suspend fun <T> handleApiCall(apiCall: suspend () -> Response<T>): ApiResult<T> 
     return withContext(Dispatchers.IO) {
         try {
             val response = apiCall()
-            if (response.isSuccessful)
+            if (response.isSuccessful) {
                 ApiResult.success(response.body())
-            else
-                ApiResult.error(ApiError(response.code(), response.message()))
+            } else {
+                val errorMessage = parseErrorBody(response.errorBody())
+                ApiResult.error(ApiError(response.code(), errorMessage))
+            }
         } catch (e: Exception) {
             when (e) {
                 is JsonEncodingException -> ApiResult.error(
@@ -66,4 +70,12 @@ suspend fun <T> handleApiCall(apiCall: suspend () -> Response<T>): ApiResult<T> 
             }
         }
     }
+}
+
+private fun parseErrorBody(errorBody: ResponseBody?): String {
+    return if (errorBody != null) {
+        val jsonObject = JSONObject(errorBody.string().trim())
+        val errorMessage = jsonObject.getString("message")
+        errorMessage
+    } else "Unknown API error: could not parse error body."
 }
