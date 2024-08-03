@@ -61,4 +61,20 @@ data class FoodNutrientsResponse(
         phosphorus = this.phosphorus,
         photo = this.photo
     )
+    fun parseToIngredientFood() = IngredientFood(
+        id = this.recipeId,
+        name = this.name,
+        servingWeight = this.servingWeight,
+        cal = this.cal,
+        totalFat = this.totalFat,
+        saturatedFat = this.saturatedFat,
+        cholesterol = this.cholesterol,
+        sodium = this.sodium,
+        totalCarbs = this.totalCarbs,
+        fiber = this.fiber,
+        sugars = this.sugars,
+        protein = this.protein,
+        potassium = this.potassium,
+        phosphorus = this.phosphorus
+    )
 }

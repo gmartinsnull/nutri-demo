@@ -70,8 +70,8 @@ fun FoodInfoScreen(
         state = state,
         stateMap = stateMap,
         context = context,
-        onUpdateIngredient = {
-            vm.updateIngredients(it)
+        onIngredientsUpdate = {
+            vm.updateNutrients(it)
         },
         navigateBack = {
             navigateBack.invoke()
@@ -87,7 +87,7 @@ fun FoodInfo(
     state: UiInfoState,
     stateMap: UiMapState,
     context: Context,
-    onUpdateIngredient: (List<SubRecipe>) -> Unit,
+    onIngredientsUpdate: (List<SubRecipe>) -> Unit,
     navigateBack: () -> Unit
 ) {
     when (state) {
@@ -186,7 +186,7 @@ fun FoodInfo(
                         FoodInfoHeaderScreen(food = food)
                         FoodInfoBodyScreen(food = food)
                         FoodInfoIngredientsScreen(ingredients = ingredients) { newIngredientValues ->
-                            onUpdateIngredient.invoke(newIngredientValues)
+                            onIngredientsUpdate.invoke(newIngredientValues)
                         }
                     }
                 }
@@ -284,7 +284,7 @@ fun FoodInfoPreview() {
                 )
             ),
             context = LocalContext.current,
-            onUpdateIngredient = {
+            onIngredientsUpdate = {
 
             },
             navigateBack = {

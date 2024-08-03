@@ -9,6 +9,7 @@ import com.gmartinsdev.nutri_demo.data.remote.NearbySearchRepository
 import com.gmartinsdev.nutri_demo.data.remote.google_maps.GoogleMapsService
 import com.gmartinsdev.nutri_demo.data.remote.nutri.RemoteDataSource
 import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodService
+import com.gmartinsdev.nutri_demo.domain.FetchIngredients
 import com.gmartinsdev.nutri_demo.domain.GetCommonFoodsByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodWithIngredients
@@ -99,4 +100,10 @@ object DataModule {
     fun provideSearchNearbyPlaces(
         repository: NearbySearchRepository
     ): SearchNearbyPlaces = SearchNearbyPlaces(repository)
+
+    @Singleton
+    @Provides
+    fun provideFetchIngredients(
+        repository: FoodRepository
+    ): FetchIngredients = FetchIngredients(repository)
 }
