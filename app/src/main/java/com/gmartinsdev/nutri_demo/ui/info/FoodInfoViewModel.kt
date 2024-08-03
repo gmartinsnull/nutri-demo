@@ -7,6 +7,7 @@ import com.gmartinsdev.nutri_demo.data.model.SubRecipe
 import com.gmartinsdev.nutri_demo.data.remote.Status
 import com.gmartinsdev.nutri_demo.domain.FetchIngredients
 import com.gmartinsdev.nutri_demo.domain.GetFoodWithIngredients
+import com.gmartinsdev.nutri_demo.domain.RecalculateNutrients
 import com.gmartinsdev.nutri_demo.domain.SearchNearbyPlaces
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +25,8 @@ import javax.inject.Inject
 class FoodInfoViewModel @Inject constructor(
     private val getFoodWithIngredients: GetFoodWithIngredients,
     private val searchNearbyPlaces: SearchNearbyPlaces,
-    private val fetchIngredients: FetchIngredients
+    private val fetchIngredients: FetchIngredients,
+    private val recalculateNutrients: RecalculateNutrients
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<UiInfoState>(UiInfoState.Loading)
@@ -32,7 +34,7 @@ class FoodInfoViewModel @Inject constructor(
     private val _stateMap = MutableStateFlow<UiMapState>(UiMapState.Loading)
     val stateMap: StateFlow<UiMapState> = _stateMap.asStateFlow()
 
-    private val ingredients: MutableList<IngredientFood> = mutableListOf()
+    private val ingredientsAsFood: MutableList<IngredientFood> = mutableListOf()
 
     /**
      * retrieves food and its recipe ingredients by id
@@ -62,12 +64,12 @@ class FoodInfoViewModel @Inject constructor(
             }.collect { ingredientsResult ->
                 when (ingredientsResult.status) {
                     Status.SUCCESS -> {
-                        ingredients.addAll(ingredientsResult.data ?: emptyList())
+                        ingredientsAsFood.addAll(ingredientsResult.data ?: emptyList())
                     }
 
                     Status.ERROR -> UiInfoState.Error(
                         ingredientsResult.error?.message
-                            ?: "error while retrieving ingredients as food: ${ingredients.toList()}"
+                            ?: "error while retrieving ingredients as food: ${ingredientsAsFood.toList()}"
                     )
                 }
             }
@@ -104,12 +106,21 @@ class FoodInfoViewModel @Inject constructor(
      * recalculates nutrients based on new ingredient values
      */
     fun updateNutrients(newIngredients: List<SubRecipe>) {
-        // TODO: implement nutrients recalculation and update nutrition values
-        // EQUATION
-        // total cal / total serving weight = x (cal per 1g)
-        // new ingredient value * x = y (cal per new ingredient value in g)
-        // total cal - (ingredient cal * serving qty) = new total cal
-        // new total cal + y = z (new total cal after ingredient value update)
-        // repeat for every single macro/micro nutrient
+        viewModelScope.launch {
+            val state = state.value
+            if (state is UiInfoState.Loaded) {
+                recalculateNutrients(
+                    state.data,
+                    ingredientsAsFood,
+                    newIngredients
+                ).collect { updatedFoodWithNutrients ->
+                    val newData = state.data.copy(
+                        food = updatedFoodWithNutrients.food,
+                        ingredients = updatedFoodWithNutrients.ingredients
+                    )
+                    _state.value = UiInfoState.Loaded(newData)
+                }
+            }
+        }
     }
 }

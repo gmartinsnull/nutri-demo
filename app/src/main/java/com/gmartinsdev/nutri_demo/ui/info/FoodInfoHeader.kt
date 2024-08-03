@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -22,19 +20,20 @@ import com.gmartinsdev.nutri_demo.R
 import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.model.Photo
 import com.gmartinsdev.nutri_demo.ui.theme.MainTheme
+import kotlin.math.round
 
 /**
  * composable responsible for displaying food nutrition information of selected food
  */
 @Composable
-fun FoodInfoHeaderScreen(modifier: Modifier = Modifier, food: MutableState<Food>) {
+fun FoodInfoHeaderScreen(modifier: Modifier = Modifier, food: Food) {
     FoodInfoHeader(food = food, modifier = modifier)
 }
 
 @Composable
 fun FoodInfoHeader(
     modifier: Modifier = Modifier,
-    food: MutableState<Food>
+    food: Food
 ) {
     Row(
         modifier = modifier
@@ -45,7 +44,7 @@ fun FoodInfoHeader(
                 .weight(1f)
                 .padding(6.dp),
             painter = rememberAsyncImagePainter(
-                model = food.value.photo.thumb,
+                model = food.photo.thumb,
                 error = painterResource(id = R.drawable.notlikethis),
                 placeholder = painterResource(id = R.drawable.image_not_available)
             ),
@@ -56,7 +55,7 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            text = "Qty: \n${food.value.servingQty}",
+            text = "Qty: \n${food.servingQty}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
         )
@@ -64,7 +63,7 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            text = "Unit: \n${food.value.servingUnit}",
+            text = "Unit: \n${food.servingUnit}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
         )
@@ -72,7 +71,7 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            text = "Food: \n${food.value.name}",
+            text = "Food: \n${food.name}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
         )
@@ -80,7 +79,7 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            text = "Calories: \n${food.value.cal}",
+            text = "Calories: \n${round(food.cal)}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
         )
@@ -88,7 +87,7 @@ fun FoodInfoHeader(
             modifier = modifier
                 .weight(1f),
             textAlign = TextAlign.Center,
-            text = "Weight: \n${food.value.servingWeight}",
+            text = "Weight: \n${round(food.servingWeight)}",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.titleSmall,
         )
@@ -99,26 +98,24 @@ fun FoodInfoHeader(
 @Composable
 fun FoodInfoHeaderPreview() {
     val food = remember {
-        mutableStateOf(
-            Food(
-                111,
-                "aaa",
-                1.0,
-                "small",
-                100.00,
-                100.00,
-                20.00,
-                20.00,
-                40.00,
-                100.00,
-                600.00,
-                300.00,
-                300.00,
-                10.00,
-                150.00,
-                120.00,
-                Photo("www.aaa.com/photo1")
-            )
+        Food(
+            111,
+            "aaa",
+            1.0,
+            "small",
+            100.00,
+            100.00,
+            20.00,
+            20.00,
+            40.00,
+            100.00,
+            600.00,
+            300.00,
+            300.00,
+            10.00,
+            150.00,
+            120.00,
+            Photo("www.aaa.com/photo1")
         )
     }
     MainTheme {

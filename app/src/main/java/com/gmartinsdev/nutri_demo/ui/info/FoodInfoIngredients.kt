@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +39,14 @@ fun FoodInfoIngredientsScreen(
     ingredients: SnapshotStateList<SubRecipe>,
     onUpdatedIngredient: (List<SubRecipe>) -> Unit
 ) {
-    FoodInfoIngredients(ingredients = ingredients, modifier = modifier) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focus = LocalFocusManager.current
+    FoodInfoIngredients(
+        ingredients = ingredients,
+        modifier = modifier
+    ) {
+        keyboardController?.hide()
+        focus.clearFocus()
         onUpdatedIngredient.invoke(ingredients)
     }
 }
@@ -52,47 +63,57 @@ fun FoodInfoIngredients(
             .padding(6.dp)
     ) {
         Column(
-            modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn {
+            LazyColumn(
+                modifier = modifier.weight(1f)
+            ) {
                 itemsIndexed(ingredients.toList()) { idx, ingredient ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            modifier = modifier
-                                .weight(1f)
-                                .padding(start = 6.dp),
+                            modifier = modifier.weight(1f),
                             textAlign = TextAlign.Center,
                             text = ingredient.food,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium,
                         )
                         TextField(
-                            modifier = modifier
-                                .padding(start = 6.dp, end = 6.dp)
-                                .weight(1f),
+                            modifier = modifier.weight(1f),
                             value = ingredient.servingWeight.toString(),
                             onValueChange = {
-                                val updatedIngredient = ingredient.copy(servingWeight = it.toDouble())
+                                val updatedIngredient =
+                                    ingredient.copy(servingWeight = it.toDouble())
                                 ingredients[idx] = updatedIngredient
                             },
                             label = { Text("Amount") },
                             maxLines = 1,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    onUpdatedIngredient.invoke(ingredients)
+                                }
+                            )
                         )
                     }
                 }
             }
             Button(
                 modifier = modifier
-                    .size(width = 300.dp, height = 80.dp)
-                    .padding(6.dp),
+                    .padding(top = 6.dp, bottom = 50.dp)
+                    .size(width = 300.dp, height = 80.dp),
                 onClick = {
                     onUpdatedIngredient.invoke(ingredients)
                 }) {
-                Text("Recalculate")
+                Text(
+                    text = "Recalculate",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
         }
     }

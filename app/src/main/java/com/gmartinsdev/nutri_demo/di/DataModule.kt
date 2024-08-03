@@ -14,6 +14,7 @@ import com.gmartinsdev.nutri_demo.domain.GetCommonFoodsByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodWithIngredients
 import com.gmartinsdev.nutri_demo.domain.GetFoods
+import com.gmartinsdev.nutri_demo.domain.RecalculateNutrients
 import com.gmartinsdev.nutri_demo.domain.SearchNearbyPlaces
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -106,4 +107,8 @@ object DataModule {
     fun provideFetchIngredients(
         repository: FoodRepository
     ): FetchIngredients = FetchIngredients(repository)
+
+    @Singleton
+    @Provides
+    fun provideRecalculateNutrients(): RecalculateNutrients = RecalculateNutrients()
 }

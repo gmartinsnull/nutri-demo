@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -17,19 +15,20 @@ import androidx.compose.ui.unit.dp
 import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.model.Photo
 import com.gmartinsdev.nutri_demo.ui.theme.MainTheme
+import kotlin.math.round
 
 /**
  * composable responsible for displaying nutritional facts of selected food
  */
 @Composable
-fun FoodInfoBodyScreen(modifier: Modifier = Modifier, food: MutableState<Food>) {
+fun FoodInfoBodyScreen(modifier: Modifier = Modifier, food: Food) {
     FoodInfoBody(food = food, modifier = modifier)
 }
 
 @Composable
 fun FoodInfoBody(
     modifier: Modifier = Modifier,
-    food: MutableState<Food>
+    food: Food
 ) {
     Column {
         Row {
@@ -45,7 +44,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                text = "Calories: ${food.value.cal} (per serving)",
+                text = "Calories: ${round(food.cal)} (per serving)",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -54,7 +53,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                text = "Total Fat: ${food.value.totalFat}g",
+                text = "Total Fat: ${round(food.totalFat)}g",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -63,7 +62,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 18.dp),
                 textAlign = TextAlign.Center,
-                text = "Saturated Fat: ${food.value.saturatedFat}g",
+                text = "Saturated Fat: ${round(food.saturatedFat)}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
             )
@@ -72,7 +71,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                text = "Cholesterol: ${food.value.cholesterol}mg",
+                text = "Cholesterol: ${round(food.cholesterol)}mg",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -81,7 +80,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                text = "Sodium: ${food.value.sodium}mg",
+                text = "Sodium: ${round(food.sodium)}mg",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -90,7 +89,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                text = "Total Carbohydrates: ${food.value.totalCarbs}g",
+                text = "Total Carbohydrates: ${round(food.totalCarbs)}g",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -99,7 +98,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 18.dp),
                 textAlign = TextAlign.Center,
-                text = "Dietary Fiber: ${food.value.fiber}g",
+                text = "Dietary Fiber: ${round(food.fiber)}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
             )
@@ -108,7 +107,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 18.dp),
                 textAlign = TextAlign.Center,
-                text = "Sugars: ${food.value.sugars}g",
+                text = "Sugars: ${round(food.sugars ?: 0.0)}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
             )
@@ -117,7 +116,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Start,
-                text = "Protein: ${food.value.protein}g",
+                text = "Protein: ${round(food.protein)}g",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.labelMedium,
             )
@@ -126,7 +125,7 @@ fun FoodInfoBody(
             Text(
                 modifier = modifier.padding(start = 6.dp),
                 textAlign = TextAlign.Center,
-                text = "Potassium: ${food.value.potassium}g",
+                text = "Potassium: ${round(food.potassium)}g",
                 fontWeight = FontWeight.Normal,
                 style = MaterialTheme.typography.labelSmall,
             )
@@ -138,26 +137,24 @@ fun FoodInfoBody(
 @Composable
 fun FoodInfoBodyPreview() {
     val food = remember {
-        mutableStateOf(
-            Food(
-                111,
-                "aaa",
-                1.0,
-                "small",
-                100.00,
-                100.00,
-                20.00,
-                20.00,
-                40.00,
-                100.00,
-                600.00,
-                300.00,
-                300.00,
-                10.00,
-                150.00,
-                120.00,
-                Photo("www.aaa.com/photo1")
-            )
+        Food(
+            111,
+            "aaa",
+            1.0,
+            "small",
+            100.00,
+            100.00,
+            20.00,
+            20.00,
+            40.00,
+            100.00,
+            600.00,
+            300.00,
+            300.00,
+            10.00,
+            150.00,
+            120.00,
+            Photo("www.aaa.com/photo1")
         )
     }
     MainTheme {

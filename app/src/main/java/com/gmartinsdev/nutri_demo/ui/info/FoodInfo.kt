@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,7 +25,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +53,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 /**
  * composable responsible for displaying nutritional info and recipe ingredients of selected food
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodInfoScreen(
     foodId: Int,
@@ -66,9 +67,21 @@ fun FoodInfoScreen(
 
     val state by vm.state.collectAsState()
     val stateMap by vm.stateMap.collectAsState()
+    val density = LocalDensity.current
+    val bottomSheetState = rememberBottomSheetScaffoldState(
+        bottomSheetState = remember {
+            SheetState(
+                skipPartiallyExpanded = false,
+                initialValue = SheetValue.Expanded,
+                density = density,
+                skipHiddenState = true
+            )
+        }
+    )
     FoodInfo(
         state = state,
         stateMap = stateMap,
+        bottomSheetState = bottomSheetState,
         context = context,
         onIngredientsUpdate = {
             vm.updateNutrients(it)
@@ -86,6 +99,7 @@ fun FoodInfo(
     modifier: Modifier = Modifier,
     state: UiInfoState,
     stateMap: UiMapState,
+    bottomSheetState: BottomSheetScaffoldState,
     context: Context,
     onIngredientsUpdate: (List<SubRecipe>) -> Unit,
     navigateBack: () -> Unit
@@ -101,7 +115,6 @@ fun FoodInfo(
         }
 
         is UiInfoState.Loaded -> {
-            val food = remember { mutableStateOf(state.data.food) }
             val ingredients = remember {
                 mutableStateListOf<SubRecipe>().apply {
                     state.data.ingredients.forEach {
@@ -110,19 +123,12 @@ fun FoodInfo(
                 }
             }
             BottomSheetScaffold(
-                scaffoldState = rememberBottomSheetScaffoldState(
-                    SheetState(
-                        skipPartiallyExpanded = false,
-                        initialValue = SheetValue.Expanded,
-                        density = LocalDensity.current,
-                        skipHiddenState = true
-                    )
-                ),
+                scaffoldState = bottomSheetState,
                 sheetPeekHeight = 50.dp,
                 topBar = {
                     CenterAlignedTopAppBar(
                         title = {
-                            Text(food.value.name)
+                            Text(state.data.food.name)
                         },
                         navigationIcon = {
                             IconButton(onClick = navigateBack) {
@@ -183,10 +189,20 @@ fun FoodInfo(
                         modifier = modifier
                             .fillMaxSize()
                     ) {
-                        FoodInfoHeaderScreen(food = food)
-                        FoodInfoBodyScreen(food = food)
-                        FoodInfoIngredientsScreen(ingredients = ingredients) { newIngredientValues ->
-                            onIngredientsUpdate.invoke(newIngredientValues)
+                        FoodInfoHeaderScreen(food = state.data.food)
+                        FoodInfoBodyScreen(food = state.data.food)
+                        if (!ingredients.isEmpty()) {
+                            FoodInfoIngredientsScreen(ingredients = ingredients) { newIngredientValues ->
+                                onIngredientsUpdate.invoke(newIngredientValues)
+                            }
+                        } else {
+                            ErrorMessageScreen(
+                                message = "Ingredients not found",
+                                buttonEnabled = false,
+                                onTryAgainClick = {
+
+                                }
+                            )
                         }
                     }
                 }
@@ -208,6 +224,7 @@ fun FoodInfo(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun FoodInfoPreview() {
@@ -283,6 +300,7 @@ fun FoodInfoPreview() {
                     )
                 )
             ),
+            bottomSheetState = rememberBottomSheetScaffoldState(),
             context = LocalContext.current,
             onIngredientsUpdate = {
 
