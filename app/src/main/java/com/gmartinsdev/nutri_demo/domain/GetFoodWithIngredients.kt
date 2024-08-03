@@ -11,7 +11,7 @@ import javax.inject.Inject
  *   along with its ingredients by food id from the database
  */
 class GetFoodWithIngredients @Inject constructor(private val repository: FoodRepository) {
-    operator fun invoke(foodId: Int): Flow<ApiResult<FoodWithIngredients>> {
+    operator fun invoke(foodId: Int): Flow<ApiResult<List<FoodWithIngredients>>> {
         return repository.getFoodIngredientsFromDb(foodId)
     }
 }

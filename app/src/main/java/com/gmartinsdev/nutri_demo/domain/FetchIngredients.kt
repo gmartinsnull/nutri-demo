@@ -36,7 +36,8 @@ class FetchIngredients @Inject constructor(private val repository: FoodRepositor
                     // checks for null in ingredients list. If any ingredient is null, return error.
                     // Otherwise, return success with same list object
                     try {
-                        val parsedResults = combinedResults.map { it.data }.requireNoNulls()
+                        val parsedResults =
+                            combinedResults.map { it.data?.first() }.requireNoNulls()
                         ApiResult.success(parsedResults)
                     } catch (e: IllegalArgumentException) {
                         ApiResult.error(

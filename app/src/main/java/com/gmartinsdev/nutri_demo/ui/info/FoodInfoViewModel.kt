@@ -46,8 +46,8 @@ class FoodInfoViewModel @Inject constructor(
                 _state.value = when (result.status) {
                     Status.SUCCESS -> {
                         if (result.data != null) {
-                            getNearbyPlaces(result.data.food.name)
-                            UiInfoState.Loaded(result.data)
+                            getNearbyPlaces(result.data.first().food.name)
+                            UiInfoState.Loaded(result.data.first())
                         } else {
                             UiInfoState.Error(
                                 "null data while retrieving food with recipe: $foodId"

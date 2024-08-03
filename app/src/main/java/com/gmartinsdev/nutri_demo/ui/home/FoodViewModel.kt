@@ -96,7 +96,7 @@ class FoodViewModel @Inject constructor(
                             Status.SUCCESS -> {
                                 // add result.data to a list/set
                                 result.data?.let { food ->
-                                    foods.add(food)
+                                    foods.add(food.first())
                                 }
                             }
 

@@ -30,7 +30,7 @@ interface FoodDao {
     fun getAll(): Flow<List<Food>>
 
     @Query("SELECT * FROM foods WHERE name = :query")
-    fun getFoodByName(query: String): Flow<Food>
+    fun getFoodByName(query: String): Flow<List<Food>>
 
     // #### sub-recipe operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -38,12 +38,12 @@ interface FoodDao {
 
     @Transaction
     @Query("SELECT * FROM foods WHERE id = :foodId")
-    fun getFoodWithIngredients(foodId: Int): Flow<FoodWithIngredients>
+    fun getFoodWithIngredients(foodId: Int): Flow<List<FoodWithIngredients>>
     // ####
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertIngredientAsFood(vararg ingredientFood: IngredientFood)
 
     @Query("SELECT * FROM ingredient_foods WHERE name = :ingredientName")
-    fun getIngredientAsFoodByName(ingredientName: String): Flow<IngredientFood>
+    fun getIngredientAsFoodByName(ingredientName: String): Flow<List<IngredientFood>>
 }

@@ -11,7 +11,7 @@ import javax.inject.Inject
  *   by title from the database
  */
 class GetFoodByName @Inject constructor(private val repository: FoodRepository) {
-    operator fun invoke(foodName: String): Flow<ApiResult<Food>> {
+    operator fun invoke(foodName: String): Flow<ApiResult<List<Food>>> {
         return repository.getFoodByName(foodName)
     }
 }

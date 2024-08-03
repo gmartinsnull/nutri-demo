@@ -57,7 +57,7 @@ class FoodRepository @Inject constructor(
     /**
      * retrieves food data from local database or fetches from remote data source
      */
-    fun getFoodByName(foodName: String): Flow<ApiResult<Food>> {
+    fun getFoodByName(foodName: String): Flow<ApiResult<List<Food>>> {
         return networkBoundResource(
             query = {
                 foodDao.getFoodByName(foodName)
@@ -85,7 +85,7 @@ class FoodRepository @Inject constructor(
                 }
             },
             shouldFetch = {
-                it == null
+                it.isNullOrEmpty()
             }
         ).flowOn(ioDispatcher)
     }
@@ -93,7 +93,7 @@ class FoodRepository @Inject constructor(
     /**
      * retrieves ingredient as food data from local database or fetches from remote data source
      */
-    fun fetchIngredientAsFoodByName(ingredientName: String): Flow<ApiResult<IngredientFood>> {
+    fun fetchIngredientAsFoodByName(ingredientName: String): Flow<ApiResult<List<IngredientFood>>> {
         return networkBoundResource(
             query = {
                 foodDao.getIngredientAsFoodByName(ingredientName)
@@ -120,7 +120,7 @@ class FoodRepository @Inject constructor(
                 }
             },
             shouldFetch = {
-                it == null
+                it.isNullOrEmpty()
             }
         ).flowOn(ioDispatcher)
     }
@@ -136,7 +136,7 @@ class FoodRepository @Inject constructor(
     /**
      * retrieves list of all foods from the database
      */
-    fun getFoodIngredientsFromDb(foodId: Int): Flow<ApiResult<FoodWithIngredients>> = flow {
+    fun getFoodIngredientsFromDb(foodId: Int): Flow<ApiResult<List<FoodWithIngredients>>> = flow {
         val data = foodDao.getFoodWithIngredients(foodId).first()
         emit(ApiResult.success(data))
     }
