@@ -49,7 +49,7 @@ class FoodRepository @Inject constructor(
             },
             shouldFetch = {
                 // fetches from remote data source if db is empty
-                it.isEmpty()
+                it == null
             }
         ).flowOn(ioDispatcher)
     }
@@ -57,10 +57,10 @@ class FoodRepository @Inject constructor(
     /**
      * retrieves food data from local database or fetches from remote data source
      */
-    fun getFoods(foodName: String): Flow<ApiResult<List<Food>>> {
+    fun getFoodByName(foodName: String): Flow<ApiResult<Food>> {
         return networkBoundResource(
             query = {
-                foodDao.getFoodsByName(foodName)
+                foodDao.getFoodByName(foodName)
             },
             fetch = {
                 remoteDataSource.fetchFoodNutrientsByTitle(foodName)
@@ -78,17 +78,14 @@ class FoodRepository @Inject constructor(
                     throw FoodNotFoundThrowable(message ?: "API result unknown exception")
                 } else {
                     val data = result.data?.foods?.first()
-                    data?.let { foodInfo ->
-                        foodDao.insertFood(foodInfo.parseToFood())
-                        foodInfo.ingredients?.let { recipes ->
-                            foodDao.insertIngredients(recipes)
-                        }
+                    data?.ingredients?.let { subRecipes ->
+                        foodDao.insertFood(data.parseToFood())
+                        foodDao.insertIngredients(subRecipes)
                     }
                 }
             },
             shouldFetch = {
-                // fetches from remote data source if db is empty
-                it.isEmpty()
+                it == null
             }
         ).flowOn(ioDispatcher)
     }
@@ -123,13 +120,7 @@ class FoodRepository @Inject constructor(
                 }
             },
             shouldFetch = {
-                try {
-                    it.name.isEmpty()
-                } catch (e: NullPointerException) {
-                    // if it (IngredientFood) object is null it means it doesn't exist in the db so
-                    // we also proceed to fetch from remote
-                    true
-                }
+                it == null
             }
         ).flowOn(ioDispatcher)
     }

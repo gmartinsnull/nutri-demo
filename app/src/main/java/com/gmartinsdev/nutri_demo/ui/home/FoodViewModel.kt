@@ -3,11 +3,14 @@ package com.gmartinsdev.nutri_demo.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gmartinsdev.nutri_demo.data.model.CommonFood
+import com.gmartinsdev.nutri_demo.data.model.Food
 import com.gmartinsdev.nutri_demo.data.remote.Status
 import com.gmartinsdev.nutri_demo.domain.GetCommonFoodsByName
 import com.gmartinsdev.nutri_demo.domain.GetFoodByName
 import com.gmartinsdev.nutri_demo.domain.GetFoods
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,25 +83,34 @@ class FoodViewModel @Inject constructor(
     }
 
     /**
-     * handle successful common food data and gets each food nutrients by name
+     * handles successful common food data response and gets each food nutrients by name
      */
     private fun handleCommonFoods(commonFoods: List<CommonFood>) {
         viewModelScope.launch {
-            commonFoods.forEach { commonFood ->
-                getFoodByName(commonFood.name).collect { result ->
-                    when (result.status) {
-                        Status.ERROR -> UiState.Error(
-                            result.error?.message
-                                ?: "error while retrieving food nutrients by title: ${commonFood.name}"
-                        )
+            val foods = mutableListOf<Food>()
+            val fetchJobs = commonFoods.map { commonFood ->
+                // using async to fire concurrent coroutines
+                async {
+                    getFoodByName(commonFood.name).collect { result ->
+                        when (result.status) {
+                            Status.SUCCESS -> {
+                                // add result.data to a list/set
+                                result.data?.let { food ->
+                                    foods.add(food)
+                                }
+                            }
 
-                        Status.SUCCESS -> {
-                            // do nothing if success
+                            Status.ERROR -> UiState.Error(
+                                result.error?.message
+                                    ?: "error while retrieving food nutrients by title: ${commonFood.name}"
+                            )
+
                         }
                     }
                 }
             }
-            getAllFoods()
+            fetchJobs.awaitAll()
+            _state.value = UiState.Loaded(foods.sortedBy { it.name })
         }
     }
 }

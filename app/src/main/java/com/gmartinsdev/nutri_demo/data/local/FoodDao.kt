@@ -29,16 +29,17 @@ interface FoodDao {
     @Query("SELECT * FROM foods ORDER BY name ASC")
     fun getAll(): Flow<List<Food>>
 
-    @Query("SELECT * FROM foods WHERE name LIKE '%' || :query || '%'")
-    fun getFoodsByName(query: String): Flow<List<Food>>
+    @Query("SELECT * FROM foods WHERE name = :query")
+    fun getFoodByName(query: String): Flow<Food>
 
-    // sub-recipe operations
+    // #### sub-recipe operations
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertIngredients(ingredients: List<SubRecipe>)
 
     @Transaction
     @Query("SELECT * FROM foods WHERE id = :foodId")
     fun getFoodWithIngredients(foodId: Int): Flow<FoodWithIngredients>
+    // ####
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertIngredientAsFood(vararg ingredientFood: IngredientFood)
