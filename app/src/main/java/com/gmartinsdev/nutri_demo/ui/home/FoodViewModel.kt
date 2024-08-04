@@ -14,6 +14,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,10 +27,6 @@ class FoodViewModel @Inject constructor(
     private val getFoodByName: GetFoodByName,
     private val getCommonFoodsByName: GetCommonFoodsByName
 ) : ViewModel() {
-
-    init {
-        getAllFoods()
-    }
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
@@ -91,23 +88,23 @@ class FoodViewModel @Inject constructor(
             val fetchJobs = commonFoods.map { commonFood ->
                 // using async to fire concurrent coroutines
                 async {
-                    getFoodByName(commonFood.name).collect { result ->
-                        when (result.status) {
-                            Status.SUCCESS -> {
-                                // add result.data to a list/set
-                                result.data?.let { food ->
+                    val result = getFoodByName(commonFood.name).first()
+                    when (result.status) {
+                        Status.SUCCESS -> {
+                            // add result.data to a list/set
+                            result.data?.let { food ->
+                                if(food.isNotEmpty())
                                     foods.add(food.first())
-                                }
                             }
-
-                            Status.ERROR -> {
-                                _state.value = UiState.Error(
-                                    result.error?.message
-                                        ?: "error while retrieving food nutrients by title: ${commonFood.name}"
-                                )
-                            }
-
                         }
+
+                        Status.ERROR -> {
+                            _state.value = UiState.Error(
+                                result.error?.message
+                                    ?: "error while retrieving food nutrients by title: ${commonFood.name}"
+                            )
+                        }
+
                     }
                 }
             }

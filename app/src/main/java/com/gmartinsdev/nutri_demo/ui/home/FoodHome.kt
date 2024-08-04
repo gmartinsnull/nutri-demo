@@ -11,8 +11,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +38,12 @@ fun FoodHomeScreen(
     navToInfoScreen: (Int) -> Unit
 ) {
     val state by vm.state.collectAsState()
+    val savedSearchQuery = rememberSaveable {
+        mutableStateOf("")
+    }
+    LaunchedEffect(Unit) {
+        vm.fetchData(savedSearchQuery.value.ifEmpty { "" })
+    }
 
     Scaffold(
         topBar = { }
@@ -47,6 +56,7 @@ fun FoodHomeScreen(
             },
             onSearch = {
                 vm.fetchData(it)
+                savedSearchQuery.value = it
             },
             onRefresh = {
                 vm.fetchData("")
