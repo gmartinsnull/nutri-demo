@@ -154,7 +154,8 @@ fun FoodInfo(
                         }
 
                         is UiMapState.Loaded -> {
-                            // TODO: implement user gps permission request to get user current location
+                            // TODO: [IMPROVEMENT] implement user gps permission request to get
+                            //  user's current location. Remove hardcoded latlng
                             val vancouver = LatLng(49.283832198, -123.119332856)
                             val cameraPositionState = rememberCameraPositionState {
                                 position = CameraPosition.fromLatLngZoom(vancouver, 13f)

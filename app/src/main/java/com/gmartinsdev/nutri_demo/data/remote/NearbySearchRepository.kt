@@ -21,6 +21,8 @@ class NearbySearchRepository @Inject constructor(
      * retrieves nearby search data from local database or fetches from remote data source
      */
     fun getNearbyPlaces(keyword: String): Flow<ApiResult<NearbySearchApiResponse>> = flow {
+        // TODO: [IMPROVEMENT] implement user gps permission request to get user's current location.
+        //  Remove hardcoded latlng
         val vancouver = "49.283832198,-123.119332856"
         emit(remoteDataSource.fetchNearbyPlaces(keyword, vancouver).first())
     }.flowOn(ioDispatcher)

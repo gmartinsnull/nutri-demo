@@ -42,6 +42,9 @@ class MainActivity : ComponentActivity() {
                 statusBarLight
             }
             MainTheme {
+                // TODO: [IMPROVEMENT] refactor this with type-safe navigation. Type-safe navigation has come out
+                //  recently. I haven't had the time to learn more about it yet so I chose to go with
+                //  the standard route navigation
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
                     composable(Screen.HomeScreen.route) {
