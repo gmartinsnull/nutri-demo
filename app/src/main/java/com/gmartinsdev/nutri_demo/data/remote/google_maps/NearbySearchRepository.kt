@@ -1,6 +1,6 @@
-package com.gmartinsdev.nutri_demo.data.remote
+package com.gmartinsdev.nutri_demo.data.remote.google_maps
 
-import com.gmartinsdev.nutri_demo.data.remote.google_maps.NearbySearchApiResponse
+import com.gmartinsdev.nutri_demo.data.remote.ApiResult
 import com.gmartinsdev.nutri_demo.data.remote.nutri.RemoteDataSource
 import com.gmartinsdev.nutri_demo.di.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher

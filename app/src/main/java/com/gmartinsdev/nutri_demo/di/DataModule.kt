@@ -2,10 +2,10 @@ package com.gmartinsdev.nutri_demo.di
 
 import android.content.Context
 import androidx.room.Room
-import com.gmartinsdev.nutri_demo.data.FoodRepository
+import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodRepository
 import com.gmartinsdev.nutri_demo.data.local.AppDatabase
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
-import com.gmartinsdev.nutri_demo.data.remote.NearbySearchRepository
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.NearbySearchRepository
 import com.gmartinsdev.nutri_demo.data.remote.google_maps.GoogleMapsService
 import com.gmartinsdev.nutri_demo.data.remote.nutri.RemoteDataSource
 import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodService

@@ -1,7 +1,7 @@
 package com.gmartinsdev.nutri_demo.domain
 
 import com.gmartinsdev.nutri_demo.data.remote.ApiResult
-import com.gmartinsdev.nutri_demo.data.remote.NearbySearchRepository
+import com.gmartinsdev.nutri_demo.data.remote.google_maps.NearbySearchRepository
 import com.gmartinsdev.nutri_demo.data.remote.google_maps.NearbySearchApiResponse
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

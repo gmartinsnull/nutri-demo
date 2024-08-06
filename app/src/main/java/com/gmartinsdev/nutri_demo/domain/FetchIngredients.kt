@@ -1,6 +1,6 @@
 package com.gmartinsdev.nutri_demo.domain
 
-import com.gmartinsdev.nutri_demo.data.FoodRepository
+import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodRepository
 import com.gmartinsdev.nutri_demo.data.model.IngredientFood
 import com.gmartinsdev.nutri_demo.data.model.SubRecipe
 import com.gmartinsdev.nutri_demo.data.remote.ApiError

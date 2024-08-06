@@ -1,6 +1,6 @@
 package com.gmartinsdev.nutri_demo
 
-import com.gmartinsdev.nutri_demo.data.FoodRepository
+import com.gmartinsdev.nutri_demo.data.remote.nutri.FoodRepository
 import com.gmartinsdev.nutri_demo.data.local.FoodDao
 import com.gmartinsdev.nutri_demo.data.model.CommonFood
 import com.gmartinsdev.nutri_demo.data.model.Food
