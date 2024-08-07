@@ -29,7 +29,7 @@ android {
             buildConfigField("String", "API_ID", "\"54b511f9\"")
             buildConfigField("String", "API_KEY", "\"58f60dd9560baaa0380b7e72bd963fbc\"")
             buildConfigField("String", "MAPS_API_URL", "\"https://maps.googleapis.com/maps/api/\"")
-            buildConfigField("String", "MAPS_API_KEY", "\"AIzaSyAypFuxPA6w_-njSzsdqLPiVM--pIxa_Pc\"")
+            buildConfigField("String", "MAPS_API_KEY", "")
         }
         release {
             isMinifyEnabled = false
